@@ -1,0 +1,9 @@
+# Target and build outputs
+target/
+backend/target/
+frontend/dist/
+frontend/node_modules/
+.DS_Store
+*.log
+.env
+.env.local
