@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { History as HistoryIcon, Download, FileText, ArrowRight, Trash2 } from 'lucide-react';
 
+import MatchRateBarChart from '../components/charts/MatchRateBarChart';
+
 export default function History() {
   const [reconciliations, setReconciliations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -73,6 +75,13 @@ export default function History() {
             <h1 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Session History</h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>View past reconciliation sessions and download reports</p>
           </div>
+
+          {reconciliations && reconciliations.length > 0 && (
+            <div className="card" style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }}>Historical Performance & Match Trends</h3>
+              <MatchRateBarChart reconciliations={reconciliations} />
+            </div>
+          )}
 
           <div className="card" style={{ padding: 0 }}>
             <div className="table-container">

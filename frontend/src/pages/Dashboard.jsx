@@ -5,6 +5,9 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { PlusCircle, FileCheck, CheckCircle2, AlertTriangle, XCircle, Copy, FileSpreadsheet, ArrowRight, Download } from 'lucide-react';
 
+import StatusDonutChart from '../components/charts/StatusDonutChart';
+import MatchRateBarChart from '../components/charts/MatchRateBarChart';
+
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,9 +47,9 @@ export default function Dashboard() {
           </div>
 
           {/* Sample Data Bar */}
-          <div className="card" style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(56,189,248,0.1))', border: '1px solid rgba(56,189,248,0.3)' }}>
+          <div className="card" style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(250, 204, 21, 0.12) 100%)', border: '1px solid rgba(250, 204, 21, 0.3)' }}>
             <div>
-              <h4 style={{ color: 'var(--primary)', marginBottom: '0.25rem' }}>⚡ Quick Test Sample Files Available</h4>
+              <h4 style={{ color: 'var(--yellow)', marginBottom: '0.25rem' }}>⚡ Quick Test Sample Files Available</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Download pre-packaged Excel/CSV test data to verify matching engine features.</p>
             </div>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -66,7 +69,7 @@ export default function Dashboard() {
                 <div className="stat-label">Total Reconciliations</div>
                 <div className="stat-value">{stats?.totalReconciliations || 0}</div>
               </div>
-              <div className="stat-icon" style={{ background: 'rgba(56, 189, 248, 0.15)', color: 'var(--primary)' }}>
+              <div className="stat-icon" style={{ background: 'rgba(239, 68, 68, 0.15)', color: 'var(--primary)' }}>
                 <FileCheck size={24} />
               </div>
             </div>
@@ -109,6 +112,24 @@ export default function Dashboard() {
               <div className="stat-icon" style={{ background: 'rgba(168, 85, 247, 0.15)', color: 'var(--purple)' }}>
                 <Copy size={24} />
               </div>
+            </div>
+          </div>
+
+          {/* Visual Analytics Graphs Row */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div className="card">
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1.25rem' }}>Transaction Status Breakdown</h3>
+              <StatusDonutChart
+                matched={stats?.matchedTransactions || 0}
+                unmatched={stats?.unmatchedTransactions || 0}
+                mismatch={stats?.mismatchedTransactions || 0}
+                duplicate={stats?.duplicateTransactions || 0}
+              />
+            </div>
+
+            <div className="card">
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1.25rem' }}>Reconciliation Match Trends</h3>
+              <MatchRateBarChart reconciliations={stats?.recentReconciliations || []} />
             </div>
           </div>
 

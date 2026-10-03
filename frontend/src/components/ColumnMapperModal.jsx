@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { X, Check } from 'lucide-react';
 
 export default function ColumnMapperModal({ isOpen, onClose, fileType, headers, sampleRows, onConfirm }) {
@@ -23,8 +24,8 @@ export default function ColumnMapperModal({ isOpen, onClose, fileType, headers, 
     onClose();
   };
 
-  return (
-    <div className="modal-overlay">
+  return ReactDOM.createPortal(
+    <div className="modal-overlay" style={{ zIndex: 99999 }}>
       <div className="modal-content" style={{ maxWidth: '800px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <div>
@@ -99,29 +100,6 @@ export default function ColumnMapperModal({ isOpen, onClose, fileType, headers, 
           </div>
         </div>
 
-        {/* Data Preview */}
-        <h4 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.75rem' }}>Data Preview (First Sample Rows)</h4>
-        <div className="table-container" style={{ maxHeight: '200px', marginBottom: '1.5rem' }}>
-          <table>
-            <thead>
-              <tr>
-                {headers?.map((h, i) => (
-                  <th key={i}>Col {i + 1}: {h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {sampleRows?.slice(0, 10).map((row, rIdx) => (
-                <tr key={rIdx}>
-                  {row.map((cell, cIdx) => (
-                    <td key={cIdx}>{cell}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
           <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
           <button className="btn btn-primary" onClick={handleSubmit}>
@@ -129,6 +107,7 @@ export default function ColumnMapperModal({ isOpen, onClose, fileType, headers, 
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

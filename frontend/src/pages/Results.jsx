@@ -5,6 +5,9 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { Download, Check, X, Info, FileSpreadsheet, FileText, Filter, Search, ArrowLeftRight, Eye } from 'lucide-react';
 
+import StatusDonutChart from '../components/charts/StatusDonutChart';
+import DebitCreditBalanceChart from '../components/charts/DebitCreditBalanceChart';
+
 export default function Results() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -222,6 +225,26 @@ export default function Results() {
                 <div className="card" style={{ background: 'rgba(52, 211, 153, 0.05)', border: '1px solid rgba(52, 211, 153, 0.2)' }}>
                   <div className="stat-label" style={{ color: '#34d399' }}>Bank Credit Total</div>
                   <div className="stat-value" style={{ fontSize: '1.25rem' }}>₹{(recon.summary.totalBankCredit || 0).toLocaleString()}</div>
+                </div>
+              </div>
+
+              {/* Row 3: Visual Analytics Graphs */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                <div className="card">
+                  <h4 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Report Status Distribution
+                  </h4>
+                  <StatusDonutChart
+                    matched={recon.summary.matchedCount || 0}
+                    possible={recon.summary.possibleMatchCount || 0}
+                    unmatched={(recon.summary.missingInBankCount || 0) + (recon.summary.missingInAccountingCount || 0)}
+                    duplicate={recon.summary.duplicateCount || 0}
+                    mismatch={recon.summary.amountMismatchCount || 0}
+                  />
+                </div>
+
+                <div className="card">
+                  <DebitCreditBalanceChart summary={recon.summary} />
                 </div>
               </div>
             </div>

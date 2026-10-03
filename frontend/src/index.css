@@ -1,20 +1,45 @@
-:root {
-  --bg-main: #0f172a;
-  --bg-card: #1e293b;
-  --bg-card-hover: #334155;
-  --border-color: #334155;
-  --primary: #38bdf8;
-  --primary-hover: #0284c7;
-  --accent: #6366f1;
-  --success: #10b981;
-  --warning: #f59e0b;
+:root, [data-theme="dark"] {
+  --bg-main: #0a0a0c;
+  --bg-card: #141418;
+  --bg-card-hover: #1f1f26;
+  --border-color: #2e2e38;
+  --primary: #ef4444;
+  --primary-hover: #dc2626;
+  --accent: #facc15;
+  --yellow: #facc15;
+  --yellow-hover: #eab308;
+  --success: #22c55e;
+  --warning: #facc15;
   --danger: #ef4444;
   --purple: #a855f7;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
   --radius: 12px;
-  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  --shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.85);
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --logo-balance: #ffffff;
+  --topbar-bg: rgba(18, 18, 21, 0.85);
+}
+
+[data-theme="light"] {
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --border-color: #e2e8f0;
+  --primary: #dc2626;
+  --primary-hover: #b91c1c;
+  --accent: #0284c7; /* Blue Accent in Light Mode */
+  --yellow: #0284c7; /* Converted Yellow to Blue in Light Mode */
+  --yellow-hover: #0369a1;
+  --success: #16a34a;
+  --warning: #0284c7;
+  --danger: #dc2626;
+  --purple: #9333ea;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --logo-balance: #0f172a;
+  --topbar-bg: rgba(255, 255, 255, 0.85);
 }
 
 * {
@@ -50,6 +75,14 @@ a {
   display: flex;
   flex-direction: column;
   padding: 1.5rem 1rem;
+  transition: width 0.25s ease, padding 0.25s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+  padding: 1.5rem 0.5rem;
 }
 
 .logo-container {
@@ -82,8 +115,8 @@ a {
 }
 
 .nav-item:hover, .nav-item.active {
-  background-color: rgba(56, 189, 248, 0.1);
-  color: var(--primary);
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--yellow);
 }
 
 .main-content {
@@ -100,7 +133,7 @@ a {
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  background-color: rgba(30, 41, 59, 0.6);
+  background-color: var(--topbar-bg);
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
@@ -123,7 +156,7 @@ a {
 }
 
 .card:hover {
-  border-color: rgba(56, 189, 248, 0.3);
+  border-color: rgba(250, 204, 21, 0.35);
 }
 
 .card-grid {
@@ -172,10 +205,34 @@ a {
 }
 
 .badge-matched { background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-.badge-possible { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+.badge-possible { background-color: rgba(250, 204, 21, 0.15); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.3); }
 .badge-unmatched { background-color: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
 .badge-duplicate { background-color: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
 .badge-mismatch { background-color: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
+
+[data-theme="light"] .badge-possible {
+  background-color: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+  border: 1px solid rgba(2, 132, 199, 0.3);
+}
+
+/* Brand Logo Badge */
+.logo-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: var(--primary);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+[data-theme="light"] .logo-badge {
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+}
 
 /* Buttons */
 .btn {
@@ -192,13 +249,24 @@ a {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  color: #fff;
+  background: linear-gradient(135deg, #ef4444 0%, #eab308 100%);
+  color: #09090b;
+  font-weight: 700;
+}
+
+[data-theme="light"] .btn-primary {
+  background: linear-gradient(135deg, #dc2626 0%, #0284c7 100%);
+  color: #ffffff;
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  opacity: 0.92;
   transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
+}
+
+[data-theme="light"] .btn-primary:hover {
+  box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
 }
 
 .btn-secondary {
@@ -236,13 +304,17 @@ table {
 }
 
 th {
-  background-color: #0f172a;
+  background-color: #09090b;
   padding: 1rem;
   font-size: 0.75rem;
   text-transform: uppercase;
   color: var(--text-muted);
   font-weight: 600;
   border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="light"] th {
+  background-color: #ffffff;
 }
 
 td {
@@ -252,7 +324,11 @@ td {
 }
 
 tr:hover {
-  background-color: rgba(51, 65, 85, 0.4);
+  background-color: rgba(39, 39, 42, 0.5);
+}
+
+[data-theme="light"] tr:hover {
+  background-color: #f1f5f9;
 }
 
 /* Form inputs */
@@ -281,7 +357,41 @@ input, select, textarea {
 
 input:focus, select:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+}
+
+/* Date Picker / Calendar Input Styling */
+input[type="date"] {
+  color: var(--text-main) !important;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+[data-theme="dark"] input[type="date"] {
+  color-scheme: dark;
+}
+
+[data-theme="light"] input[type="date"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(1) brightness(1.8) !important;
+  opacity: 1 !important;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+[data-theme="light"] input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: none !important;
+  opacity: 1 !important;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  transform: scale(1.15);
 }
 
 /* Modal */
@@ -308,4 +418,5 @@ input:focus, select:focus {
   padding: 2rem;
   max-height: 90vh;
   overflow-y: auto;
+  overflow-x: hidden;
 }

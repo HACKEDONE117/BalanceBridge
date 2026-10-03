@@ -106,11 +106,23 @@ export default function NewReconciliation() {
                 </div>
                 <div className="form-group">
                   <label>Period Start Date *</label>
-                  <input type="date" value={formData.periodStart} onChange={(e) => setFormData({ ...formData, periodStart: e.target.value })} required />
+                  <input
+                    type="date"
+                    value={formData.periodStart}
+                    onChange={(e) => setFormData({ ...formData, periodStart: e.target.value })}
+                    onClick={(e) => e.target.showPicker?.()}
+                    required
+                  />
                 </div>
                 <div className="form-group">
                   <label>Period End Date *</label>
-                  <input type="date" value={formData.periodEnd} onChange={(e) => setFormData({ ...formData, periodEnd: e.target.value })} required />
+                  <input
+                    type="date"
+                    value={formData.periodEnd}
+                    onChange={(e) => setFormData({ ...formData, periodEnd: e.target.value })}
+                    onClick={(e) => e.target.showPicker?.()}
+                    required
+                  />
                 </div>
               </div>
             </div>
@@ -187,7 +199,7 @@ export default function NewReconciliation() {
 
             <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '1rem' }} disabled={loading}>
               <Play size={20} />
-              {loading ? 'Running Engine...' : 'Execute Reconciliation Engine'}
+              {loading ? 'Executing...' : 'Execute'}
             </button>
           </form>
 

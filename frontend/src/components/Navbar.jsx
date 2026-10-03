@@ -1,11 +1,17 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { SidebarContext } from '../context/SidebarContext';
+import { ThemeContext } from '../context/ThemeContext';
 import api from '../services/api';
-import { User, LogOut, Shield, Bell } from 'lucide-react';
+import { User, LogOut, Shield, Bell, PanelLeftOpen, PanelLeftClose, Sun, Moon } from 'lucide-react';
+import LogoutConfirmModal from './LogoutConfirmModal';
 
 export default function Navbar({ title }) {
   const { user, logout } = useContext(AuthContext);
+  const { collapsed, toggleSidebar } = useContext(SidebarContext);
+  const { theme, toggleTheme, isDark } = useContext(ThemeContext);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
   const [pendingCount, setPendingCount] = useState(0);
 
@@ -26,16 +32,58 @@ export default function Navbar({ title }) {
     }
   };
 
-  const handleLogout = () => {
+  const handleConfirmLogout = () => {
+    setShowLogoutConfirm(false);
     logout();
     navigate('/login');
   };
 
   return (
     <header className="topbar">
-      <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>{title || 'Financial Reconciliation Engine'}</h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <button
+          onClick={toggleSidebar}
+          style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
+            color: 'var(--text-main)',
+            padding: '0.4rem 0.6rem',
+            borderRadius: 'var(--radius)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justify: 'center'
+          }}
+          title={collapsed ? 'Show Side Panel' : 'Hide Side Panel'}
+        >
+          {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+        </button>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>{title || 'Financial Reconciliation Engine'}</h2>
+      </div>
       
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        {/* Dark / Light Mode Toggle Button */}
+        <button
+          onClick={toggleTheme}
+          style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
+            color: isDark ? '#facc15' : '#ea580c',
+            padding: '0.4rem 0.75rem',
+            borderRadius: '20px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            fontSize: '0.8rem',
+            fontWeight: 600,
+            transition: 'all 0.2s ease'
+          }}
+          title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
+        >
+          {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+        </button>
         {/* Admin Notification Bell */}
         {user?.role === 'ADMIN' && pendingCount > 0 && (
           <button
@@ -71,7 +119,7 @@ export default function Navbar({ title }) {
 
         <button 
           className="btn btn-danger" 
-          onClick={handleLogout}
+          onClick={() => setShowLogoutConfirm(true)}
           style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
           title="Sign out of account"
         >
@@ -79,6 +127,12 @@ export default function Navbar({ title }) {
           <span>Logout</span>
         </button>
       </div>
+
+      <LogoutConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleConfirmLogout}
+      />
     </header>
   );
 }

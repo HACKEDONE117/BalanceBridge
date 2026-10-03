@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { FileCheck, UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
+import { FileCheck, UserPlus, AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -36,21 +36,60 @@ export default function Register() {
         setSuccessMsg(result.message || 'Registration request submitted! Please wait for your System Administrator to approve your account.');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed.');
+      const serverMsg = err.response?.data?.message;
+      if (serverMsg) {
+        setError(serverMsg);
+      } else if (!err.response) {
+        setError("Unable to connect to backend. Render free backend may be waking up (takes 30-50s). Please wait 30 seconds and try again, or verify VITE_API_URL on Vercel.");
+      } else {
+        setError('Registration failed.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-main)', padding: '1rem' }}>
-      <div className="card" style={{ width: '100%', maxWidth: '450px', padding: '2.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--primary)' }}>
-          <FileCheck size={36} />
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700 }}>BalanceBridge</h1>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-main)', padding: '2rem 1rem' }}>
+      <div style={{ width: '100%', maxWidth: '450px' }}>
+        
+        {/* Back to Home Button */}
+        <div style={{ marginBottom: '1rem' }}>
+          <Link to="/" style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            color: 'var(--text-muted)',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            transition: 'color 0.2s'
+          }}>
+            <ArrowLeft size={16} /> Back to Home
+          </Link>
         </div>
 
-        <h3 style={{ textAlign: 'center', marginBottom: '1.5rem', fontWeight: 600 }}>Create New Account</h3>
+        {/* Brand Header */}
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div className="logo-badge" style={{
+            width: '54px',
+            height: '54px',
+            borderRadius: '16px',
+            margin: '0 auto 1rem auto'
+          }}>
+            <FileCheck size={30} style={{ transform: 'translateX(1px)', flexShrink: 0 }} />
+          </div>
+
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.5px' }}>
+            <span style={{ color: 'var(--logo-balance)' }}>Balance</span>
+            <span style={{ color: 'var(--primary)' }}>Bridge</span>
+          </h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.35rem' }}>
+            Automated Financial Reconciliation System
+          </p>
+        </div>
+
+        <div className="card" style={{ width: '100%', padding: '2.5rem' }}>
+          <h3 style={{ textAlign: 'center', marginBottom: '1.5rem', fontWeight: 600 }}>Create New Account</h3>
 
         {error && (
           <div style={{ background: 'rgba(239,68,68,0.15)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)', padding: '0.75rem', borderRadius: 'var(--radius)', marginBottom: '1.5rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -121,5 +160,6 @@ export default function Register() {
         </p>
       </div>
     </div>
+  </div>
   );
 }
