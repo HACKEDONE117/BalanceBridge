@@ -2,15 +2,13 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { SidebarContext } from '../context/SidebarContext';
-import { ThemeContext } from '../context/ThemeContext';
 import api from '../services/api';
-import { User, LogOut, Shield, Bell, PanelLeftOpen, PanelLeftClose, Sun, Moon } from 'lucide-react';
+import { User, LogOut, Shield, Bell, Settings } from 'lucide-react';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
 export default function Navbar({ title }) {
   const { user, logout } = useContext(AuthContext);
   const { collapsed, toggleSidebar } = useContext(SidebarContext);
-  const { theme, toggleTheme, isDark } = useContext(ThemeContext);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
   const [pendingCount, setPendingCount] = useState(0);
@@ -38,52 +36,51 @@ export default function Navbar({ title }) {
     navigate('/login');
   };
 
+  const displayName = user?.name || (user?.email ? user.email.split('@')[0] : 'Sarah J.');
+
   return (
-    <header className="topbar">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+    <header className="topbar" style={{
+      background: 'rgba(7, 13, 24, 0.95)',
+      borderBottom: '1px solid rgba(200, 155, 60, 0.25)',
+      backdropFilter: 'blur(12px)',
+      padding: '0.85rem 1.75rem',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      position: 'sticky',
+      top: 0,
+      zIndex: 100
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <button
           onClick={toggleSidebar}
           style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-color)',
-            color: 'var(--text-main)',
-            padding: '0.4rem 0.6rem',
-            borderRadius: 'var(--radius)',
+            background: 'rgba(15, 26, 48, 0.8)',
+            border: '1px solid rgba(200, 155, 60, 0.3)',
+            color: 'var(--gold-primary)',
+            padding: '0.45rem 0.65rem',
+            borderRadius: '8px',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            justify: 'center'
+            justifyContent: 'center',
+            transition: 'all 0.2s'
           }}
           title={collapsed ? 'Show Side Panel' : 'Hide Side Panel'}
         >
-          {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+          {/* Hamburger 3-line icon */}
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0"  width="18" height="2" rx="1" fill="currentColor"/>
+            <rect x="0" y="6"  width="18" height="2" rx="1" fill="currentColor"/>
+            <rect x="0" y="12" width="18" height="2" rx="1" fill="currentColor"/>
+          </svg>
         </button>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>{title || 'Financial Reconciliation Engine'}</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.2px', margin: 0 }}>
+          {title || 'Reconciliation Overview'}
+        </h2>
       </div>
       
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        {/* Dark / Light Mode Toggle Button */}
-        <button
-          onClick={toggleTheme}
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-color)',
-            color: isDark ? '#facc15' : '#ea580c',
-            padding: '0.4rem 0.75rem',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            transition: 'all 0.2s ease'
-          }}
-          title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
-        >
-          {isDark ? <Sun size={16} /> : <Moon size={16} />}
-          <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
-        </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
         {/* Admin Notification Bell */}
         {user?.role === 'ADMIN' && pendingCount > 0 && (
           <button
@@ -100,30 +97,86 @@ export default function Navbar({ title }) {
               cursor: 'pointer',
               fontSize: '0.8rem'
             }}
-            title="Click to view pending standard user registrations"
+            title="Click to view pending registrations"
           >
-            <Bell size={16} className="spinner" style={{ animationDuration: '3s' }} />
-            <span><strong>{pendingCount}</strong> Pending Requests</span>
+            <Bell size={15} className="spinner" style={{ animationDuration: '3s' }} />
+            <span><strong>{pendingCount}</strong> Pending</span>
           </button>
         )}
 
+        {/* User Profile Pill (Exact Match to Reference Top Right: [👤 Sarah J.]) */}
         {user && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.4rem 0.8rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
-            <User size={16} color="var(--primary)" />
-            <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>{user.email}</span>
-            <span className="badge badge-matched" style={{ fontSize: '0.65rem', padding: '0.1rem 0.4rem', marginLeft: '0.25rem' }}>
-              {user.role}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.6rem',
+            background: 'rgba(15, 26, 48, 0.7)',
+            padding: '0.35rem 0.85rem',
+            borderRadius: '24px',
+            border: '1px solid rgba(200, 155, 60, 0.3)'
+          }}>
+            <div style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              background: 'rgba(200, 155, 60, 0.2)',
+              border: '1px solid var(--gold-primary)',
+              color: 'var(--gold-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <User size={15} />
+            </div>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#f3f4f6' }}>
+              {displayName}
             </span>
           </div>
         )}
 
+        {/* Settings Button (Exact Match to Reference Top Right: [⚙ Settings]) */}
+        <button
+          onClick={() => navigate(user?.role === 'ADMIN' ? '/admin' : '/dashboard')}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--text-muted)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            fontSize: '0.85rem',
+            fontWeight: 500,
+            transition: 'color 0.2s'
+          }}
+          title="Account Settings"
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--gold-primary)'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+        >
+          <Settings size={16} />
+          <span>Settings</span>
+        </button>
+
+        {/* Logout Button */}
         <button 
-          className="btn btn-danger" 
           onClick={() => setShowLogoutConfirm(true)}
-          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+          style={{
+            background: 'rgba(239, 68, 68, 0.12)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            color: '#f87171',
+            padding: '0.4rem 0.8rem',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            fontSize: '0.8rem',
+            fontWeight: 600,
+            transition: 'all 0.2s'
+          }}
           title="Sign out of account"
         >
-          <LogOut size={15} />
+          <LogOut size={14} />
           <span>Logout</span>
         </button>
       </div>

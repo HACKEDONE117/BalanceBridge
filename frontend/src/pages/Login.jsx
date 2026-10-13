@@ -1,11 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { FileCheck, LogIn, AlertCircle, ShieldCheck, Lock, ArrowRight, ArrowLeft } from 'lucide-react';
+import BridgeLogo from '../components/BridgeLogo';
+import BridgeBackground from '../components/BridgeBackground';
+import { Mail, Lock, AlertCircle, ArrowLeft } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +27,7 @@ export default function Login() {
       if (serverMsg) {
         setError(serverMsg);
       } else if (!err.response) {
-        setError("Unable to connect to backend. Render free backend may be waking up (takes 30-50s). Please wait 30 seconds and try again, or verify VITE_API_URL on Vercel.");
+        setError("Unable to connect to backend. Please ensure the backend is running at http://localhost:8080");
       } else {
         setError('Login failed. Please check credentials.');
       }
@@ -39,14 +42,19 @@ export default function Login() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justify: 'center',
-      background: 'var(--bg-main)',
-      padding: '2rem 1rem'
+      justifyContent: 'center',
+      background: 'radial-gradient(ellipse at top, #0d1728 0%, #070d18 100%)',
+      padding: '2rem 1rem',
+      position: 'relative',
+      overflowX: 'hidden'
     }}>
-      <div style={{ width: '100%', maxWidth: '420px' }}>
+      {/* Background Architectural Blueprint Bridge Artwork */}
+      <BridgeBackground />
+
+      <div style={{ width: '100%', maxWidth: '440px', position: 'relative', zIndex: 10 }}>
         
         {/* Back to Home Button */}
-        <div style={{ marginBottom: '1rem' }}>
+        <div style={{ marginBottom: '1.25rem' }}>
           <Link to="/" style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -54,106 +62,191 @@ export default function Login() {
             color: 'var(--text-muted)',
             fontSize: '0.85rem',
             fontWeight: 600,
+            textDecoration: 'none',
             transition: 'color 0.2s'
           }}>
             <ArrowLeft size={16} /> Back to Home
           </Link>
         </div>
 
-        {/* Brand Header */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div className="logo-badge" style={{
-            width: '54px',
-            height: '54px',
-            borderRadius: '16px',
-            margin: '0 auto 1rem auto'
-          }}>
-            <FileCheck size={30} style={{ transform: 'translateX(1px)', flexShrink: 0 }} />
+        {/* 2ND IMAGE: EXACT GOLD-BORDERED SIGN IN CARD */}
+        <div className="gold-frame" style={{
+          padding: '2.5rem 2.25rem',
+          borderRadius: '20px',
+          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(200, 155, 60, 0.12)'
+        }}>
+          
+          {/* Brand Header with Arch Logo */}
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
+              <BridgeLogo size={52} subtitle="Autonomous Reconciliation Platform" textLayout="center" />
+            </div>
+
+            <h2 style={{
+              fontSize: '1.75rem',
+              fontWeight: 800,
+              color: 'var(--gold-primary)',
+              letterSpacing: '-0.3px',
+              marginTop: '1rem',
+              marginBottom: 0
+            }}>
+              Sign In
+            </h2>
           </div>
 
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.5px' }}>
-            <span style={{ color: 'var(--logo-balance)' }}>Balance</span>
-            <span style={{ color: 'var(--primary)' }}>Bridge</span>
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.35rem' }}>
-            Automated Financial Reconciliation System
-          </p>
-        </div>
-
-        {/* Login Form Card */}
-        <div className="card" style={{ padding: '2.25rem', boxShadow: 'var(--shadow)', borderRadius: '16px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.35rem', textAlign: 'center' }}>
-            Welcome Back
-          </h2>
-          <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '1.75rem', fontSize: '0.85rem' }}>
-            Enter your account credentials to access dashboard
-          </p>
-
           {error && (
-            <div style={{ background: 'rgba(239,68,68,0.15)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)', padding: '0.75rem 1rem', borderRadius: 'var(--radius)', marginBottom: '1.5rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{
+              background: 'rgba(239,68,68,0.12)',
+              color: '#f87171',
+              border: '1px solid rgba(239,68,68,0.3)',
+              padding: '0.75rem 1rem',
+              borderRadius: '8px',
+              marginBottom: '1.5rem',
+              fontSize: '0.85rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
               <AlertCircle size={16} style={{ flexShrink: 0 }} />
               <span>{error}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label style={{ fontSize: '0.85rem', fontWeight: 600 }}>Email Address</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="user@company.com"
-                style={{ width: '100%' }}
-              />
+            {/* Email Address */}
+            <div className="form-group" style={{ marginBottom: '1.25rem' }}>
+              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e2e8f0', marginBottom: '0.5rem' }}>
+                Email Address
+              </label>
+              <div style={{ position: 'relative' }}>
+                <Mail size={18} style={{
+                  position: 'absolute',
+                  left: '1rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--text-muted)'
+                }} />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="Email Address"
+                  style={{
+                    width: '100%',
+                    paddingLeft: '2.75rem',
+                    background: 'rgba(15, 26, 48, 0.85)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)'
+                  }}
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label style={{ fontSize: '0.85rem', fontWeight: 600 }}>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="••••••••"
-                style={{ width: '100%' }}
-              />
+            {/* Password */}
+            <div className="form-group" style={{ marginBottom: '1.25rem' }}>
+              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e2e8f0', marginBottom: '0.5rem' }}>
+                Password
+              </label>
+              <div style={{ position: 'relative' }}>
+                <Lock size={18} style={{
+                  position: 'absolute',
+                  left: '1rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--text-muted)'
+                }} />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Password"
+                  style={{
+                    width: '100%',
+                    paddingLeft: '2.75rem',
+                    background: 'rgba(15, 26, 48, 0.85)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)'
+                  }}
+                />
+              </div>
             </div>
 
+            {/* Remember Me & Forgot Password Row */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '1.75rem',
+              fontSize: '0.85rem'
+            }}>
+              <label style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                cursor: 'pointer',
+                color: 'var(--text-muted)',
+                marginBottom: 0
+              }}>
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  style={{ accentColor: 'var(--gold-primary)', width: 'auto', padding: 0 }}
+                />
+                <span>Remember Me</span>
+              </label>
+
+              <a
+                href="#forgot"
+                onClick={(e) => { e.preventDefault(); alert("Please contact administrator to reset password."); }}
+                style={{ color: 'var(--gold-primary)', textDecoration: 'none', fontWeight: 500 }}
+              >
+                Forgot Password?
+              </a>
+            </div>
+
+            {/* Solid Gold Sign In Button */}
             <button
               type="submit"
               className="btn btn-primary"
               style={{
                 width: '100%',
-                justify: 'center',
-                marginTop: '1.25rem',
-                padding: '0.75rem 1rem',
-                fontSize: '0.95rem'
+                justifyContent: 'center',
+                padding: '0.85rem 1rem',
+                fontSize: '1rem',
+                borderRadius: '8px'
               }}
               disabled={loading}
             >
-              <LogIn size={18} />
-              {loading ? 'Authenticating...' : 'Sign In'}
+              {loading ? 'Signing In...' : 'Sign In'}
             </button>
           </form>
 
-          <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+          {/* Footer Toggle to Sign Up */}
+          <div style={{
+            marginTop: '1.75rem',
+            textAlign: 'center',
+            fontSize: '0.85rem',
+            color: 'var(--text-muted)'
+          }}>
             Don't have an account?{' '}
-            <Link to="/register" style={{ color: 'var(--yellow)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-              Create Account <ArrowRight size={14} />
+            <Link to="/register" style={{ color: 'var(--gold-primary)', fontWeight: 600, textDecoration: 'none' }}>
+              Sign Up.
             </Link>
           </div>
-        </div>
 
-        {/* Minimalist Trust Footer */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', marginTop: '2rem', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-            <ShieldCheck size={14} style={{ color: 'var(--success)' }} /> 256-bit Security
-          </span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-            <Lock size={14} style={{ color: 'var(--primary)' }} /> Password PDF Support
-          </span>
+          {/* Copyright Bottom Stamp */}
+          <div style={{
+            textAlign: 'center',
+            fontSize: '0.75rem',
+            color: 'rgba(148, 163, 184, 0.6)',
+            marginTop: '2rem',
+            borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+            paddingTop: '1.25rem'
+          }}>
+            <span>© 2026 Balance-Bridge  Privacy Policy</span>
+          </div>
+
         </div>
 
       </div>

@@ -1,45 +1,56 @@
 :root, [data-theme="dark"] {
-  --bg-main: #0a0a0c;
-  --bg-card: #141418;
-  --bg-card-hover: #1f1f26;
-  --border-color: #2e2e38;
-  --primary: #ef4444;
-  --primary-hover: #dc2626;
-  --accent: #facc15;
-  --yellow: #facc15;
-  --yellow-hover: #eab308;
+  --bg-main: #070d18;
+  --bg-secondary: #0b1426;
+  --bg-card: #0f1a30;
+  --bg-card-hover: #162442;
+  --border-color: rgba(200, 155, 60, 0.3);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --gold-primary: #c89b3c;
+  --gold-hover: #d9ab4a;
+  --gold-glow: rgba(200, 155, 60, 0.25);
+  --primary: #c89b3c;
+  --primary-hover: #d9ab4a;
+  --accent: #d9ab4a;
+  --yellow: #c89b3c;
+  --yellow-hover: #d9ab4a;
   --success: #22c55e;
-  --warning: #facc15;
+  --warning: #f59e0b;
   --danger: #ef4444;
   --purple: #a855f7;
-  --text-main: #f4f4f5;
-  --text-muted: #a1a1aa;
-  --radius: 12px;
-  --shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.85);
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 20px rgba(200, 155, 60, 0.08);
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  --logo-balance: #ffffff;
-  --topbar-bg: rgba(18, 18, 21, 0.85);
+  --logo-balance: #c89b3c;
+  --topbar-bg: rgba(7, 13, 24, 0.85);
 }
 
 [data-theme="light"] {
   --bg-main: #f8fafc;
+  --bg-secondary: #f1f5f9;
   --bg-card: #ffffff;
-  --bg-card-hover: #f1f5f9;
-  --border-color: #e2e8f0;
-  --primary: #dc2626;
-  --primary-hover: #b91c1c;
-  --accent: #0284c7; /* Blue Accent in Light Mode */
-  --yellow: #0284c7; /* Converted Yellow to Blue in Light Mode */
-  --yellow-hover: #0369a1;
+  --bg-card-hover: #f8fafc;
+  --border-color: rgba(180, 135, 45, 0.35);
+  --border-subtle: #e2e8f0;
+  --gold-primary: #b88a2e;
+  --gold-hover: #c99939;
+  --gold-glow: rgba(184, 138, 46, 0.2);
+  --primary: #b88a2e;
+  --primary-hover: #c99939;
+  --accent: #b88a2e;
+  --yellow: #b88a2e;
+  --yellow-hover: #c99939;
   --success: #16a34a;
-  --warning: #0284c7;
+  --warning: #d97706;
   --danger: #dc2626;
   --purple: #9333ea;
   --text-main: #0f172a;
   --text-muted: #64748b;
   --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --logo-balance: #0f172a;
-  --topbar-bg: rgba(255, 255, 255, 0.85);
+  --logo-balance: #b88a2e;
+  --topbar-bg: rgba(255, 255, 255, 0.9);
 }
 
 * {
@@ -70,8 +81,8 @@ a {
 
 .sidebar {
   width: 260px;
-  background-color: var(--bg-card);
-  border-right: 1px solid var(--border-color);
+  background-color: #080f1d;
+  border-right: 1px solid rgba(200, 155, 60, 0.2);
   display: flex;
   flex-direction: column;
   padding: 1.5rem 1rem;
@@ -106,17 +117,71 @@ a {
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  color: var(--text-muted);
+  gap: 0.85rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 0.92rem;
   font-weight: 500;
+  text-decoration: none;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
   transition: all 0.2s ease;
+  user-select: none;
 }
 
-.nav-item:hover, .nav-item.active {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: var(--yellow);
+.nav-item:hover {
+  background-color: rgba(200, 155, 60, 0.08);
+  color: #f1f5f9;
+}
+
+/* Exact match to active Dashboard button in reference image */
+.nav-item.active {
+  background: rgba(15, 26, 48, 0.9);
+  border: 1.5px solid #c89b3c;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 0 16px rgba(200, 155, 60, 0.12);
+}
+
+.nav-item.active svg {
+  color: #c89b3c;
+}
+
+.nav-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-left: 2.2rem;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
+.nav-subitem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.nav-subitem:hover {
+  color: #ffffff;
+  background-color: rgba(200, 155, 60, 0.08);
+}
+
+.nav-subitem.active {
+  color: #c89b3c;
+  font-weight: 600;
+  background-color: rgba(200, 155, 60, 0.1);
 }
 
 .main-content {
@@ -221,17 +286,26 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  color: var(--primary);
+  background: rgba(200, 155, 60, 0.12);
+  border: 1px solid rgba(200, 155, 60, 0.4);
+  color: var(--gold-primary);
   flex-shrink: 0;
   box-sizing: border-box;
   transition: all 0.2s ease;
 }
 
 [data-theme="light"] .logo-badge {
-  background: rgba(220, 38, 38, 0.08);
-  border: 1px solid rgba(220, 38, 38, 0.2);
+  background: rgba(184, 138, 46, 0.1);
+  border: 1px solid rgba(184, 138, 46, 0.35);
+}
+
+/* Luxury Gold Container Framing */
+.gold-frame {
+  border: 1.5px solid rgba(200, 155, 60, 0.38);
+  box-shadow: 0 0 35px rgba(200, 155, 60, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(11, 20, 38, 0.88);
+  backdrop-filter: blur(16px);
 }
 
 /* Buttons */
@@ -240,7 +314,7 @@ a {
   align-items: center;
   gap: 0.5rem;
   padding: 0.65rem 1.25rem;
-  border-radius: var(--radius);
+  border-radius: 8px;
   font-weight: 600;
   font-size: 0.875rem;
   cursor: pointer;
@@ -249,20 +323,21 @@ a {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #ef4444 0%, #eab308 100%);
-  color: #09090b;
+  background: linear-gradient(135deg, #c89b3c 0%, #dfb055 100%);
+  color: #070d18;
   font-weight: 700;
+  box-shadow: 0 4px 15px rgba(200, 155, 60, 0.25);
 }
 
 [data-theme="light"] .btn-primary {
-  background: linear-gradient(135deg, #dc2626 0%, #0284c7 100%);
+  background: linear-gradient(135deg, #b88a2e 0%, #d4a23d 100%);
   color: #ffffff;
 }
 
 .btn-primary:hover {
-  opacity: 0.92;
+  background: linear-gradient(135deg, #d9ab4a 0%, #ebc168 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
+  box-shadow: 0 6px 20px rgba(200, 155, 60, 0.35);
 }
 
 [data-theme="light"] .btn-primary:hover {
@@ -346,18 +421,26 @@ label {
 }
 
 input, select, textarea {
-  background-color: var(--bg-main);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
+  background-color: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
   padding: 0.75rem 1rem;
   color: var(--text-main);
   font-size: 0.9rem;
   outline: none;
+  transition: all 0.2s ease;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
 }
 
 input:focus, select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 2px rgba(200, 155, 60, 0.35);
 }
 
 /* Date Picker / Calendar Input Styling */
