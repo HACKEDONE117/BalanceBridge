@@ -8,4 +8,5 @@ public interface AuditLogRepository extends MongoRepository<AuditLog, String> {
     List<AuditLog> findAllByOrderByTimestampDesc();
     List<AuditLog> findTop20ByOrderByTimestampDesc();
     List<AuditLog> findByUserIdOrderByTimestampDesc(String userId);
+    List<AuditLog> findByUserIdInOrderByTimestampDesc(List<String> userIds);
 }

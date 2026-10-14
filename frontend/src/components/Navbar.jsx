@@ -36,7 +36,7 @@ export default function Navbar({ title }) {
     navigate('/login');
   };
 
-  const displayName = user?.name || (user?.email ? user.email.split('@')[0] : 'Sarah J.');
+  const displayName = user?.name || (user?.email ? user.email.split('@')[0] : (user?.role === 'ADMIN' ? 'Admin' : 'User'));
 
   return (
     <header className="topbar" style={{

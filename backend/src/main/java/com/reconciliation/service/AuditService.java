@@ -27,4 +27,8 @@ public class AuditService {
     public List<AuditLog> getAllLogs() {
         return auditLogRepository.findAllByOrderByTimestampDesc();
     }
+
+    public List<AuditLog> getLogsForUsers(List<String> userIds) {
+        return auditLogRepository.findByUserIdInOrderByTimestampDesc(userIds);
+    }
 }

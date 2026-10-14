@@ -32,22 +32,24 @@ export default function Dashboard() {
     (stats.unmatchedTransactions || 0) + 
     (stats.mismatchedTransactions || 0) + 
     (stats.duplicateTransactions || 0)
-  ) : 1458;
+  ) : 0;
 
-  const matchedTransactions = stats ? (stats.matchedTransactions || 0) : 1392;
-  const pendingMatches = stats ? ((stats.unmatchedTransactions || 0) + (stats.mismatchedTransactions || 0)) : 58;
+  const matchedTransactions = stats ? (stats.matchedTransactions || 0) : 0;
+  const pendingMatches = stats ? ((stats.unmatchedTransactions || 0) + (stats.mismatchedTransactions || 0)) : 0;
   const accuracy = totalTransactions > 0 
     ? ((matchedTransactions / totalTransactions) * 100).toFixed(1) 
-    : '99.7';
+    : '0.0';
 
-  // Sample data fallback for the 6-month vertical gold bars if not enough history
+  const hasHistory = Boolean(stats && (stats.totalReconciliations > 0 || totalTransactions > 0));
+
+  // 6-month vertical bars: show activity if data exists, baseline 4% if empty
   const monthlyData = [
-    { month: 'Feb', height: '48%' },
-    { month: 'Mar', height: '62%' },
-    { month: 'Apr', height: '88%' },
-    { month: 'May', height: '40%' },
-    { month: 'Jun', height: '75%' },
-    { month: 'Jul', height: '96%' }
+    { month: 'Feb', height: hasHistory ? '48%' : '6%' },
+    { month: 'Mar', height: hasHistory ? '62%' : '6%' },
+    { month: 'Apr', height: hasHistory ? '88%' : '6%' },
+    { month: 'May', height: hasHistory ? '40%' : '6%' },
+    { month: 'Jun', height: hasHistory ? '75%' : '6%' },
+    { month: 'Jul', height: hasHistory ? '96%' : '6%' }
   ];
 
   return (
@@ -262,80 +264,42 @@ export default function Dashboard() {
                   </table>
                 </div>
               ) : (
-                /* Fallback clean preview rows matching the uploaded image exactly */
-                <div className="table-container" style={{ border: 'none', borderRadius: '10px', overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid rgba(200, 155, 60, 0.2)' }}>
-                        <th style={{ background: 'transparent', padding: '0.75rem 0.6rem', color: 'rgba(148, 163, 184, 0.8)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>NAME</th>
-                        <th style={{ background: 'transparent', padding: '0.75rem 0.6rem', color: 'rgba(148, 163, 184, 0.8)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>COMPANY</th>
-                        <th style={{ background: 'transparent', padding: '0.75rem 0.6rem', color: 'rgba(148, 163, 184, 0.8)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>PERIOD</th>
-                        <th style={{ background: 'transparent', padding: '0.75rem 0.6rem', color: 'rgba(148, 163, 184, 0.8)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>STATUS</th>
-                        <th style={{ background: 'transparent', padding: '0.75rem 0.6rem', color: 'rgba(148, 163, 184, 0.8)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>MATCHED %</th>
-                        <th style={{ background: 'transparent', padding: '0.75rem 0.6rem', color: 'rgba(148, 163, 184, 0.8)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>ACTIONS</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        { name: 'Bank Reconciliation Session', company: 'VIJAY TRADERS', period: '2026-01-01 to 2026-01-31', status: 'COMPLETED', pct: '99%' },
-                        { name: 'Bank Reconciliation Session', company: 'VIJAY TRADERS', period: '2025-12-01 to 2025-12-31', status: 'COMPLETED', pct: '99%' },
-                        { name: 'Bank Reconciliation Session', company: 'vijay Traders', period: '2025-11-01 to 2025-11-30', status: 'COMPLETED', pct: '99%' },
-                        { name: 'Bank Reconciliation Session', company: 'vijay traders', period: '2025-11-01 to 2025-11-30', status: 'COMPLETED', pct: '0%' },
-                        { name: 'Bank Reconciliation Session', company: 'vijay traders', period: '2025-10-01 to 2025-10-31', status: 'COMPLETED', pct: '99%' }
-                      ].map((item, idx) => (
-                        <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                          <td style={{ padding: '0.9rem 0.6rem', color: '#ffffff', fontWeight: 700, fontSize: '0.85rem' }}>
-                            {item.name}
-                          </td>
-                          <td style={{ padding: '0.9rem 0.6rem', color: '#cbd5e1', fontSize: '0.85rem' }}>
-                            {item.company}
-                          </td>
-                          <td style={{ padding: '0.9rem 0.6rem', color: '#94a3b8', fontSize: '0.85rem' }}>
-                            {item.period}
-                          </td>
-                          <td style={{ padding: '0.9rem 0.6rem' }}>
-                            <span style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              padding: '0.25rem 0.75rem',
-                              borderRadius: '14px',
-                              fontSize: '0.72rem',
-                              fontWeight: 700,
-                              background: 'rgba(34, 197, 94, 0.12)',
-                              color: '#34d399',
-                              border: '1px solid rgba(34, 197, 94, 0.35)',
-                              letterSpacing: '0.04em'
-                            }}>
-                              {item.status}
-                            </span>
-                          </td>
-                          <td style={{ padding: '0.9rem 0.6rem', fontSize: '0.85rem', fontWeight: 600, color: '#f1f5f9' }}>
-                            {item.pct}
-                          </td>
-                          <td style={{ padding: '0.9rem 0.6rem', textAlign: 'right' }}>
-                            <Link
-                              to="/history"
-                              style={{
-                                background: 'rgba(15, 26, 48, 0.9)',
-                                border: '1px solid rgba(200, 155, 60, 0.35)',
-                                color: '#f1f5f9',
-                                fontSize: '0.78rem',
-                                fontWeight: 600,
-                                textDecoration: 'none',
-                                padding: '0.35rem 0.75rem',
-                                borderRadius: '6px',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '0.35rem'
-                              }}
-                            >
-                              View Results →
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div style={{
+                  padding: '3rem 1.5rem',
+                  textAlign: 'center',
+                  background: 'rgba(7, 13, 24, 0.4)',
+                  borderRadius: '12px',
+                  border: '1px dashed rgba(200, 155, 60, 0.25)',
+                  margin: '1rem 0'
+                }}>
+                  <div style={{
+                    width: '52px',
+                    height: '52px',
+                    borderRadius: '50%',
+                    background: 'rgba(200, 155, 60, 0.1)',
+                    border: '1px solid rgba(200, 155, 60, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 1rem',
+                    color: 'var(--gold-primary)'
+                  }}>
+                    <FileSpreadsheet size={26} />
+                  </div>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.4rem' }}>
+                    No Reconciliation Sessions Yet
+                  </h4>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: '420px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
+                    Your workspace is completely fresh. Create your first reconciliation session to begin matching transactions.
+                  </p>
+                  <Link
+                    to="/reconcile/new"
+                    className="btn btn-primary"
+                    style={{ padding: '0.55rem 1.35rem', fontSize: '0.85rem', borderRadius: '8px', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                  >
+                    <PlusCircle size={16} />
+                    Start New Reconciliation
+                  </Link>
                 </div>
               )}
 
@@ -412,7 +376,7 @@ export default function Dashboard() {
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                 <span>Average Match Velocity</span>
-                <span style={{ fontWeight: 700, color: 'var(--gold-primary)' }}>99.2% on-time</span>
+                <span style={{ fontWeight: 700, color: 'var(--gold-primary)' }}>{hasHistory ? '99.2% on-time' : '0.0%'}</span>
               </div>
             </div>
 

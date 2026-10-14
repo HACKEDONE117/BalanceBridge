@@ -27,8 +27,19 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+    public ResponseEntity<?> getAllUsers(@RequestHeader(value = "Authorization", required = false) String token) {
+        String adminId = null;
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwt = token.replace("Bearer ", "");
+            adminId = jwtTokenProvider.getUserIdFromToken(jwt);
+        }
+
+        if (adminId != null) {
+            List<User> managedUsers = new java.util.ArrayList<>(userRepository.findByAdminId(adminId));
+            userRepository.findById(adminId).ifPresent(managedUsers::add);
+            return ResponseEntity.ok(managedUsers);
+        }
+        return ResponseEntity.ok(List.of());
     }
 
     @GetMapping("/pending-requests")
@@ -42,11 +53,8 @@ public class AdminController {
         List<User> pendingList;
         if (adminId != null) {
             pendingList = userRepository.findByAdminIdAndApprovalStatus(adminId, "PENDING_APPROVAL");
-            if (pendingList.isEmpty()) {
-                pendingList = userRepository.findByApprovalStatus("PENDING_APPROVAL");
-            }
         } else {
-            pendingList = userRepository.findByApprovalStatus("PENDING_APPROVAL");
+            pendingList = List.of();
         }
 
         return ResponseEntity.ok(pendingList);
@@ -63,11 +71,8 @@ public class AdminController {
         List<User> pendingList;
         if (adminId != null) {
             pendingList = userRepository.findByAdminIdAndApprovalStatus(adminId, "PENDING_APPROVAL");
-            if (pendingList.isEmpty()) {
-                pendingList = userRepository.findByApprovalStatus("PENDING_APPROVAL");
-            }
         } else {
-            pendingList = userRepository.findByApprovalStatus("PENDING_APPROVAL");
+            pendingList = List.of();
         }
 
         return ResponseEntity.ok(Map.of("count", pendingList.size()));
@@ -130,7 +135,22 @@ public class AdminController {
     }
 
     @GetMapping("/audit-logs")
-    public ResponseEntity<?> getAuditLogs() {
-        return ResponseEntity.ok(auditService.getAllLogs());
+    public ResponseEntity<?> getAuditLogs(@RequestHeader(value = "Authorization", required = false) String token) {
+        String adminId = null;
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwt = token.replace("Bearer ", "");
+            adminId = jwtTokenProvider.getUserIdFromToken(jwt);
+        }
+
+        if (adminId != null) {
+            List<User> managedUsers = userRepository.findByAdminId(adminId);
+            List<String> userIds = new java.util.ArrayList<>();
+            userIds.add(adminId);
+            for (User u : managedUsers) {
+                if (u.getId() != null) userIds.add(u.getId());
+            }
+            return ResponseEntity.ok(auditService.getLogsForUsers(userIds));
+        }
+        return ResponseEntity.ok(List.of());
     }
 }
