@@ -35,8 +35,8 @@ public class AdminController {
         }
 
         if (adminId != null) {
-            List<User> managedUsers = new java.util.ArrayList<>(userRepository.findByAdminId(adminId));
-            userRepository.findById(adminId).ifPresent(managedUsers::add);
+            // Strictly return ONLY users working under this admin
+            List<User> managedUsers = userRepository.findByAdminId(adminId);
             return ResponseEntity.ok(managedUsers);
         }
         return ResponseEntity.ok(List.of());

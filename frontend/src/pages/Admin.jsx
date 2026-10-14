@@ -142,7 +142,7 @@ export default function Admin() {
               }}
               onClick={() => setActiveTab('users')}
             >
-              <Users size={16} /> All Registered Users
+              <Users size={16} /> Users Under You ({users.length})
             </button>
 
             <button
@@ -226,49 +226,62 @@ export default function Admin() {
           ) : activeTab === 'users' ? (
             <div className="card gold-frame" style={{ padding: 0, background: 'rgba(15, 26, 48, 0.75)', backdropFilter: 'blur(16px)', overflow: 'hidden' }}>
               <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(200, 155, 60, 0.25)' }}>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#f8fafc', margin: 0 }}>All Organization Users</h3>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#f8fafc', margin: 0 }}>Users Working Under You</h3>
+                <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: '0.3rem 0 0 0' }}>
+                  Manage standard accountant users who registered under your administrator account.
+                </p>
               </div>
-              <div className="table-container" style={{ margin: 0, border: 'none' }}>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th>Approval Status</th>
-                      <th>Active Status</th>
-                      <th>Registered Date</th>
-                      <th style={{ textAlign: 'right' }}>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((u) => (
-                      <tr key={u.id}>
-                        <td><strong style={{ color: '#f8fafc' }}>{u.name}</strong></td>
-                        <td style={{ color: '#cbd5e1' }}>{u.email}</td>
-                        <td><span className="badge badge-matched">{u.role}</span></td>
-                        <td>
-                          <span className={`badge ${u.approvalStatus === 'APPROVED' ? 'badge-matched' : u.approvalStatus === 'REJECTED' ? 'badge-unmatched' : 'badge-possible'}`}>
-                            {u.approvalStatus || (u.active ? 'APPROVED' : 'PENDING')}
-                          </span>
-                        </td>
-                        <td>
-                          <span className={`badge ${u.active ? 'badge-matched' : 'badge-unmatched'}`}>
-                            {u.active ? 'Active' : 'Disabled'}
-                          </span>
-                        </td>
-                        <td style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-'}</td>
-                        <td style={{ textAlign: 'right' }}>
-                          <button className="btn btn-secondary" style={{ padding: '0.35rem 0.65rem', fontSize: '0.75rem', borderColor: 'rgba(200, 155, 60, 0.35)' }} onClick={() => handleToggleUserStatus(u.id)}>
-                            {u.active ? <ToggleRight size={16} color="var(--success)" /> : <ToggleLeft size={16} color="var(--danger)" />}
-                            {u.active ? 'Deactivate' : 'Activate'}
-                          </button>
-                        </td>
+              {users.length > 0 ? (
+                <div className="table-container" style={{ margin: 0, border: 'none' }}>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Approval Status</th>
+                        <th>Active Status</th>
+                        <th>Registered Date</th>
+                        <th style={{ textAlign: 'right' }}>Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {users.map((u) => (
+                        <tr key={u.id}>
+                          <td><strong style={{ color: '#f8fafc' }}>{u.name}</strong></td>
+                          <td style={{ color: '#cbd5e1' }}>{u.email}</td>
+                          <td><span className="badge badge-matched">{u.role}</span></td>
+                          <td>
+                            <span className={`badge ${u.approvalStatus === 'APPROVED' ? 'badge-matched' : u.approvalStatus === 'REJECTED' ? 'badge-unmatched' : 'badge-possible'}`}>
+                              {u.approvalStatus || (u.active ? 'APPROVED' : 'PENDING')}
+                            </span>
+                          </td>
+                          <td>
+                            <span className={`badge ${u.active ? 'badge-matched' : 'badge-unmatched'}`}>
+                              {u.active ? 'Active' : 'Disabled'}
+                            </span>
+                          </td>
+                          <td style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-'}</td>
+                          <td style={{ textAlign: 'right' }}>
+                            <button className="btn btn-secondary" style={{ padding: '0.35rem 0.65rem', fontSize: '0.75rem', borderColor: 'rgba(200, 155, 60, 0.35)' }} onClick={() => handleToggleUserStatus(u.id)}>
+                              {u.active ? <ToggleRight size={16} color="var(--success)" /> : <ToggleLeft size={16} color="var(--danger)" />}
+                              {u.active ? 'Deactivate' : 'Activate'}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '3.5rem 1rem', color: '#94a3b8' }}>
+                  <Users size={48} style={{ opacity: 0.3, marginBottom: '1rem', color: 'var(--primary)' }} />
+                  <p style={{ margin: 0, fontSize: '0.95rem', fontWeight: 600, color: '#f8fafc' }}>No Team Users Registered Under You Yet</p>
+                  <p style={{ margin: '0.4rem 0 0', fontSize: '0.85rem', color: '#94a3b8' }}>
+                    When standard users register choosing your Administrator Name or Email, they will appear here for management.
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="card gold-frame" style={{ padding: 0, background: 'rgba(15, 26, 48, 0.75)', backdropFilter: 'blur(16px)', overflow: 'hidden' }}>
